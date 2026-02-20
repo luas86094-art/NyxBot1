@@ -1,0 +1,34 @@
+import { formatMessage } from '../utils/helpers.js';
+
+export default {
+  name: 'eat',
+  registrationRequired: false,
+  description: 'eat a user',
+
+  async execute({ sock, chatId, mentions, args, message, lang }) {
+    if (!mentions || mentions.length === 0) {
+      await sock.sendMessage(chatId, {
+        text: formatMessage(lang === 'de' ?
+          '❌ Nutze: .eat @user [optional text]' :
+          '❌ Use: .eat @user [optional text]', 'eat', chatId)
+      });
+      return;
+    }
+
+    const senderId = message.key.participant || message.key.remoteJid;
+    const targetJid = mentions[0];
+    const targetLid = targetJid.split('@')[0];
+    const senderLid = senderId.split('@')[0];
+
+    const customText = args.slice(1).join(' ');
+
+    const text = customText ?
+      `‼️Kannibale‼️\n\n🔪🩸 @${senderLid} ate @${targetLid}!\n\n💬 "${customText}"` :
+      `‼️Canibalism‼️\n\n🔪🩸 @${senderLid} ate @${targetLid}!`;
+
+    await sock.sendMessage(chatId, {
+      text: formatMessage(text, 'eat', chatId),
+      mentions: [senderId, targetJid]
+    });
+  }
+};

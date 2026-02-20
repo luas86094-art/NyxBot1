@@ -1,0 +1,9 @@
+node_modules/
+auth_info_baileys/
+session_*/
+*.log
+.env
+data/*.json
+!data/.gitkeep
+downloads/
+temp/
